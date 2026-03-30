@@ -1,0 +1,25 @@
+{
+  "name": "reddit-bot",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Safety-first Reddit promotion assistant for worksrecorded.com",
+  "main": "dist/bot.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/bot.js",
+    "discover": "node dist/bot.js discover",
+    "post": "node dist/bot.js post",
+    "stats": "node dist/bot.js stats",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "openai": "^4.104.0",
+    "snoowrap": "^1.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "@types/snoowrap": "^1.15.10",
+    "typescript": "^5.8.3"
+  }
+}
