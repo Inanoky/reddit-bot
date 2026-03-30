@@ -1,58 +1,67 @@
-# WorksRecorded Reddit Bot (Vercel + TypeScript)
+# Reddit Promotion Assistant Bot (TypeScript)
 
-This project is a Vercel-ready Reddit bot that:
-1. Runs every hour via Vercel Cron.
-2. Finds relevant recent posts in selected subreddits.
-3. Uses OpenAI to generate one helpful comment.
-4. Posts **1 reply per hour**.
-5. Logs what was posted and shows it in a simple web dashboard.
+A **safety-first TypeScript Reddit bot** that helps promote `worksrecorded.com` by generating helpful comments for relevant threads using the OpenAI API.
 
-## Stack
+This version is intentionally designed to reduce spam risk:
+- human approval required before posting,
+- strict cap of 4 comments/day,
+- subreddit allowlist only,
+- quality guardrails and dedupe logic,
+- non-sales prompting style.
 
-- Next.js (App Router)
-- Vercel Cron (`vercel.json`)
-- Snoowrap (Reddit API)
-- OpenAI API (Responses)
-- Vercel KV (optional but recommended) for posted history
+## Features
 
-## Local development
+- `discover`: find recent matching posts + generate comment drafts.
+- `post`: post only approved drafts (daily cap enforced).
+- `stats`: view queue and posting status.
+
+## Quick start
+
+### 1) Install deps
 
 ```bash
 npm install
-cp .env.example .env
-npm run dev
 ```
 
-Dashboard URL locally:
-- `http://localhost:3000/`
+### 2) Configure env
 
-Manual cron trigger locally:
-- `http://localhost:3000/api/cron/reply?secret=YOUR_CRON_SECRET`
+```bash
+cp .env.example .env
+# fill in Reddit/OpenAI credentials
+```
 
-## Vercel deployment
+### 3) Build
 
-1. Push this repository to GitHub.
-2. Import project into Vercel.
-3. Set environment variables from `.env.example`.
-4. Ensure `CRON_SECRET` is set.
-5. (Recommended) Attach Vercel KV and set `KV_REST_API_URL` + `KV_REST_API_TOKEN`.
+```bash
+npm run build
+```
 
-Cron schedule is configured in `vercel.json`:
-- `0 * * * *` => once every hour.
+### 4) Generate drafts
 
-## Routes
+```bash
+npm run discover
+```
 
-- `/` → Dashboard showing AI-posted comments and target subreddit/post.
-- `/api/cron/reply` → Cron endpoint that posts one AI reply each run.
-- `/api/posted` → JSON endpoint for posted history.
+### 5) Review pending queue
 
-## Safety guidance
+Edit `queue/pending.json` and set:
+- `"approved": true` to allow posting
+- `"approved": false` to reject
 
-- Keep `ALLOW_SUBREDDITS` limited to communities where self-promotion is allowed.
-- Keep content genuinely useful and not repetitive.
-- Monitor dashboard regularly.
+### 6) Post approved drafts
 
-## Notes on persistence
+```bash
+npm run post
+```
 
-- In production, use Vercel KV for reliable storage.
-- Without KV, local file fallback (`src/data/posted.json`) is used for development only.
+## Configuration
+
+Set these in `.env`:
+- `BUSINESS_URL=https://worksrecorded.com`
+- `POSTS_PER_DAY=4`
+- `ALLOW_SUBREDDITS=...`
+- `SEARCH_KEYWORDS=...`
+
+## Responsible use
+
+Follow Reddit site rules and each subreddit’s self-promotion policy. Use this tool for genuine, useful participation.
